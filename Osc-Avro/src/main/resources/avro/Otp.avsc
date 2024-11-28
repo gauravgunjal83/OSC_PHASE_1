@@ -1,0 +1,23 @@
+{
+  "namespace": "com.in.avro",
+  "type": "record",
+  "name": "OtpMessage",
+  "fields": [
+    {
+      "name": "otp",
+      "type": "string"
+    },
+    {
+      "name": "email",
+      "type": "string"
+    },
+    {
+      "name": "failedAttempts",
+      "type": "int"
+    },
+    {
+      "name": "purpose",
+      "type": "string"
+    }
+  ]
+}

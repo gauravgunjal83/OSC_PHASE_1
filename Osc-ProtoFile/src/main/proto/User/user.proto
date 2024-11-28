@@ -1,0 +1,58 @@
+syntax = "proto3";
+
+option java_multiple_files = true;
+option java_package = "com.in.proto";
+
+message RegisterUserRequest {
+    string userId = 1;
+    string name = 2;
+    string email = 3;
+    string mobileNumber = 4;
+    string dob = 5;
+    string password = 6;
+
+}
+message RegisterUserResponse {
+    bool success = 1;
+    string message = 2;
+
+}
+
+message UniqueEmailRequest {
+    string email = 1;
+}
+
+message UniqueEmailResponse {
+    bool isUnique = 1;
+
+}
+
+message PasswordRequest {
+    string email = 1;
+    string password = 2;
+}
+
+message PasswordResponse {
+    string message = 1;
+}
+
+message VerifyCredentialsRequest {
+    string userId = 1;
+}
+
+message VerifyCredentialsResponse {
+    string userId = 1;
+    string name = 2;
+    string password = 3;
+}
+
+service UserDataService {
+    rpc RegisterUser (RegisterUserRequest) returns (RegisterUserResponse);
+    rpc verifyEmailAddressIsUnique (UniqueEmailRequest) returns (UniqueEmailResponse);
+    rpc isEmailPresent (UniqueEmailRequest) returns (UniqueEmailResponse);
+        rpc resetPassword (PasswordRequest) returns (PasswordResponse);
+    rpc VerifyCredentials (VerifyCredentialsRequest) returns (VerifyCredentialsResponse);
+}
+
+
+

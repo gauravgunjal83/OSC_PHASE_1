@@ -1,0 +1,29 @@
+syntax = "proto3";
+option java_multiple_files = true;
+option java_package = "com.in.Session";
+
+service SessionService {
+  rpc CreateSession (CreateSessionRequest) returns (CreateSessionResponse);
+  rpc ValidateSession (ValidateSessionRequest) returns (SessionStatusResponse);
+}
+
+message SessionStatusResponse{
+  bool isActive = 1;
+  string userId = 2;
+  string deviceType = 3;
+}
+
+message ValidateSessionRequest{
+  string userId = 1;
+  string sessionId = 2;
+}
+
+message CreateSessionRequest{
+  string userId = 1;
+  string deviceType = 2;
+  string sessionId = 3;
+}
+
+message CreateSessionResponse{
+  bool success = 1;
+}

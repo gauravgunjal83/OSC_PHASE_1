@@ -1,0 +1,12 @@
+{
+  "type": "record",
+  "name": "SessionValue",
+  "namespace": "com.in.avro",
+  "fields": [
+    {
+      "name": "sessionStatus",
+      "type": "boolean",
+      "default": false
+    }
+  ]
+}
