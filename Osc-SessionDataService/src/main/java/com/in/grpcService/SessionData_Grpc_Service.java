@@ -46,7 +46,7 @@ public class SessionData_Grpc_Service extends SessionServiceGrpc.SessionServiceI
             if (session.isLogout()) {
                 log.info("Session logged out successfully, sessionId: {}", request.getSessionId());
             } else {
-                log.info("Session is still active, sessionId: {}", request.getSessionId());
+                log.info("Session is not active, sessionId: {}", request.getSessionId());
             }
 
             // Map and send the session status response
