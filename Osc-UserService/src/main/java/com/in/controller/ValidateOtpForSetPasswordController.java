@@ -9,13 +9,11 @@ import jakarta.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/users")
+@RequestMapping("/user")
+@CrossOrigin
 public class ValidateOtpForSetPasswordController {
 
     private static final Logger log = LoggerFactory.getLogger(ValidateOtpForSetPasswordController.class);
@@ -25,7 +23,7 @@ public class ValidateOtpForSetPasswordController {
         this.validateOtpService = validateOtpService;
     }
 
-    @PostMapping("/validateOtp")
+    @PostMapping("/validateotp")
     public ResponseEntity<ResponseCode> validateOtpForSetPassword(@Valid @RequestBody OtpValidateDtoRequest request){
         log.info("Request received for validate OTP: {}",request.toString());
         ResponseCode response = validateOtpService.validateOtpForSetPassword(request);

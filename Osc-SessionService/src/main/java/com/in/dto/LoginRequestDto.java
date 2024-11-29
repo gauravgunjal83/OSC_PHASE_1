@@ -1,5 +1,6 @@
 package com.in.dto;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
 import lombok.AllArgsConstructor;
@@ -20,5 +21,6 @@ public class LoginRequestDto {
                     + "\n and include at least one uppercase letter, one lowercase letter, one digit, and one special character.")
     private String password;
 
+    @JsonProperty("loginDevice")
     private String loginDeviceType;
 }

@@ -17,7 +17,7 @@ import java.util.concurrent.CompletableFuture;
 public class SessionKafkaProducer {
 
     private static final Logger log = LoggerFactory.getLogger(SessionKafkaProducer.class);
-    private KafkaTemplate<SessionKey, SessionValue> kafkaTemplate;
+    private final KafkaTemplate<SessionKey, SessionValue> kafkaTemplate;
 
     public SessionKafkaProducer(KafkaTemplate<SessionKey, SessionValue> kafkaTemplate) {
         this.kafkaTemplate = kafkaTemplate;

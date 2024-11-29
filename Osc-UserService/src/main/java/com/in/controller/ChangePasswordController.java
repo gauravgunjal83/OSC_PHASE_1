@@ -14,7 +14,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/users")
+@RequestMapping("/user")
+@CrossOrigin
 public class ChangePasswordController {
 
     private static final Logger log = LoggerFactory.getLogger(ChangePasswordController.class);
