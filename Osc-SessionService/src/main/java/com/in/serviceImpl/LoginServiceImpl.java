@@ -49,14 +49,14 @@ public class LoginServiceImpl implements LoginService {
                 //Check for credentials
                 if (!verifyCredentials.getPassword().equals(loginRequest.getPassword())) {
                     log.error("Password is incorrect for userId: {}", loginRequest.getUserId());
-                    return new DataResponse(CustomStatusCodes.PASSWORD_INCORRECT, "Password is incorrect");
+                    return new DataResponse(CustomStatusCodes.PASSWORD_INCORRECT, null);
                 }
                 //check for session are exists with same device or not
                 SessionValue session = sessionStore.get(createSessionId(loginRequest.getUserId(), loginRequest.getLoginDeviceType()));
                 if (session != null && session.getSessionStatus() == true) {
                     log.error("Session already active for this userId {}", loginRequest.getUserId());
                     log.info("You are not able to login if session active with same device");
-                    return new DataResponse(CustomStatusCodes.ACTIVE_SESSION,  "Session is already active...");
+                    return new DataResponse(CustomStatusCodes.ACTIVE_SESSION,  null);
                 } else {
                     String sessionId = sessionIdGenerator.generateSessionId();
 
@@ -77,10 +77,10 @@ public class LoginServiceImpl implements LoginService {
         } catch (StatusRuntimeException e) {
             if (e.getStatus().getCode() == io.grpc.Status.Code.NOT_FOUND) {
                 log.error("User id not found: {}", loginRequest.getUserId());
-                return new DataResponse(CustomStatusCodes.USERID_INCORRECT, "User ID not found");
+                return new DataResponse(CustomStatusCodes.USERID_INCORRECT, null);
             }
         }
-        return new DataResponse(CustomStatusCodes.UNEXPECTED_ERROR, "Internal server error");
+        return new DataResponse(CustomStatusCodes.UNEXPECTED_ERROR, null);
 
     }
 

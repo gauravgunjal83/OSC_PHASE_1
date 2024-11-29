@@ -1,10 +1,7 @@
 package com.in.service.serviceImpl;
 
 import com.in.avro.User;
-import com.in.dto.CustomStatusCodes;
-import com.in.dto.DataResponse;
-import com.in.dto.RegistrationResponse;
-import com.in.dto.SetPasswordRequest;
+import com.in.dto.*;
 import com.in.kafka.kafkaProducer.otp.OtpKafkaProducer;
 import com.in.kafka.kafkaProducer.user.UserKafkaProducer;
 import com.in.mapper.Mapper;
@@ -33,12 +30,12 @@ public class SetPasswordServiceImpl implements SetPasswordService {
     }
 
     @Override
-    public DataResponse setUserPassword(SetPasswordRequest request) {
+    public ResponseCode setUserPassword(SetPasswordRequest request) {
         //Retrieve user data from the kafka state store
         User user = userKeyValueStore.get(request.getUserId());
         if (user == null) {
             log.error("User not found with this Id: {}", request.getUserId());
-            return new DataResponse(CustomStatusCodes.UNEXPECTED_ERROR, "User not found.");
+            return new ResponseCode(CustomStatusCodes.UNEXPECTED_ERROR);
         }
         try {
             //Convert Dtos to registrationResponse and gRPC request
@@ -52,10 +49,10 @@ public class SetPasswordServiceImpl implements SetPasswordService {
             // Clean up kafka topics(delete otp and user data)
             otpKafkaProducer.deleteOtp(request.getUserId());
             userKafkaProducer.deleteUserDetails(request.getUserId());
-            return new DataResponse(CustomStatusCodes.OTP_VALID, "User registered successfully");
+            return new ResponseCode(CustomStatusCodes.USER_CREATION_SUCCESS);
         } catch (Exception ex) {
             log.error("Error while setting up the password for the user id: {}", request.getUserId(), ex);
-            return new DataResponse(CustomStatusCodes.UNEXPECTED_ERROR, "Failed to setting password.");
+            return new ResponseCode(CustomStatusCodes.UNEXPECTED_ERROR);
         }
     /*    User user = userKeyValueStore.get(request.getUserId());
         if (user == null) {

@@ -2,6 +2,7 @@ package com.in.controller;
 
 import com.in.dto.ChangePasswordOnEmailRequest;
 import com.in.dto.DataResponse;
+import com.in.dto.ResponseCode;
 import com.in.mapper.CustomStatusCodeMapper;
 import com.in.service.ForgotPasswordService;
 import jakarta.validation.Valid;
@@ -26,9 +27,9 @@ public class ForgotPasswordController {
     }
 
     @PostMapping("/forgotPassword")
-    public ResponseEntity<DataResponse> forgotPassword(@RequestBody ChangePasswordOnEmailRequest request) {
+    public ResponseEntity<ResponseCode> forgotPassword(@RequestBody ChangePasswordOnEmailRequest request) {
         log.info("Request received to forgot password {}", request.getEmail());
-        DataResponse response = forgotPasswordService.forgotPassword(request.getEmail());
+        ResponseCode response = forgotPasswordService.forgotPassword(request.getEmail());
         return ResponseEntity.status(CustomStatusCodeMapper.mapStatusCode(response.getCode())).body(response);
     }
 }

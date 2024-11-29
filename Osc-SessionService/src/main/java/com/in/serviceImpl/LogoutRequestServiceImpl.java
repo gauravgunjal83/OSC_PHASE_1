@@ -3,10 +3,7 @@ package com.in.serviceImpl;
 import com.in.Session.SessionServiceGrpc;
 import com.in.Session.SessionStatusResponse;
 import com.in.avro.SessionKey;
-import com.in.dto.CustomStatusCodes;
-import com.in.dto.DataResponse;
-import com.in.dto.LogoutRequestDto;
-import com.in.dto.SessionRequestDto;
+import com.in.dto.*;
 import com.in.kafka.producer.SessionKafkaProducer;
 import com.in.mapper.Mapper;
 import com.in.service.LogoutRequestService;
@@ -28,14 +25,14 @@ public class LogoutRequestServiceImpl implements LogoutRequestService {
     }
 
     @Override
-    public DataResponse logoutUser(LogoutRequestDto logoutRequest) {
+    public ResponseCode logoutUser(LogoutRequestDto logoutRequest) {
         try {
             // Validate the session via gRPC call
             SessionStatusResponse sessionResponse = serviceBlockingStub.validateSession(Mapper.logoutReqDtoToValidateSessionReqProto(logoutRequest));
 
             if (!Mapper.sessionStatusResponseProtoToDto(sessionResponse)) {
                 log.warn("Session already logged out or invalid sessionId: {}", logoutRequest.getSessionId());
-                return new DataResponse(CustomStatusCodes.UNEXPECTED_ERROR, null);
+                return new ResponseCode(CustomStatusCodes.UNEXPECTED_ERROR);
             }
             // Create a request to update session status to false (logged out)
             SessionRequestDto sessionUpdateRequest = new SessionRequestDto(
@@ -45,18 +42,18 @@ public class LogoutRequestServiceImpl implements LogoutRequestService {
             // Publish the session update to Kafka
             sessionKafkaProducer.publishToSessionTopic(sessionUpdateRequest);
             log.info("Session successfully logged out for sessionId: {}", logoutRequest.getSessionId());
-            return new DataResponse(CustomStatusCodes.LOGOUT_SUCCESS, "Session successfully logged out.");
+            return new ResponseCode(CustomStatusCodes.LOGOUT_SUCCESS);
         } catch (StatusRuntimeException e) {
             if (e.getStatus().getCode() == io.grpc.Status.Code.NOT_FOUND) {
                 log.error("Session not found for sessionId: {}", logoutRequest.getSessionId());
-                return new DataResponse(CustomStatusCodes.UNEXPECTED_ERROR, "SessionId not found.");
+                return new ResponseCode(CustomStatusCodes.UNEXPECTED_ERROR);
             }
             log.error("gRPC call failed with status: {}", e.getStatus(), e);
         } catch (Exception e) {
             log.error("Unexpected error during logout request for sessionId: {}", logoutRequest.getSessionId(), e);
         }
 
-        return new DataResponse(CustomStatusCodes.UNEXPECTED_ERROR, "Internal server error. Please try again later.");
+        return new ResponseCode(CustomStatusCodes.UNEXPECTED_ERROR);
     }
 
     // Helper method to create a session key for Kafka

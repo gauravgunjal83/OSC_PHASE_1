@@ -1,6 +1,7 @@
 package com.in.controller;
 
 import com.in.dto.DataResponse;
+import com.in.dto.ResponseCode;
 import com.in.dto.SetPasswordRequest;
 import com.in.mapper.CustomStatusCodeMapper;
 import com.in.service.SetPasswordService;
@@ -26,9 +27,9 @@ public class SetPasswordController {
     }
 
     @PostMapping("/setPassword")
-    public ResponseEntity<DataResponse>  setPassword(@Valid @RequestBody SetPasswordRequest passwordRequest){
+    public ResponseEntity<ResponseCode>  setPassword(@Valid @RequestBody SetPasswordRequest passwordRequest){
         log.info("Received request for set the password: {}", passwordRequest.toString());
-        DataResponse dataResponse = passwordService.setUserPassword(passwordRequest);
+        ResponseCode dataResponse = passwordService.setUserPassword(passwordRequest);
         return ResponseEntity.status(CustomStatusCodeMapper.mapStatusCode(dataResponse.getCode())).body(dataResponse);
     }
 

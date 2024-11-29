@@ -4,6 +4,7 @@ import com.in.avro.OtpMessage;
 import com.in.dto.CustomStatusCodes;
 import com.in.dto.DataResponse;
 import com.in.dto.OtpValidateDtoRequest;
+import com.in.dto.ResponseCode;
 import com.in.kafka.kafkaProducer.otp.OtpKafkaProducer;
 import com.in.kafka.kafkaProducer.user.UserKafkaProducer;
 import com.in.service.ValidateOtpForSetPasswordService;
@@ -32,7 +33,7 @@ public class ValidateOtpForSetPasswordServiceImpl implements ValidateOtpForSetPa
     }
 
     @Override
-    public DataResponse validateOtpForSetPassword(OtpValidateDtoRequest request) {
+    public ResponseCode validateOtpForSetPassword(OtpValidateDtoRequest request) {
        /* OtpMessage message = otpStore.get(request.getUserId());
         if (message == null) {
             log.error("UserId {} not found for validation", request.getUserId());
@@ -85,7 +86,7 @@ public class ValidateOtpForSetPasswordServiceImpl implements ValidateOtpForSetPa
 
             if (otpData == null) {
                 log.error("userId {} for Otp Validation not Match ", request.getUserId());
-                return new DataResponse(CustomStatusCodes.USER_ID_NOT_FOUND, "UserId does not exist: " + request.getUserId());
+                return new ResponseCode(CustomStatusCodes.USER_ID_NOT_FOUND);
             }
             if (!otpData.getOtp().toString().equals(request.getOTP())) {
 
@@ -97,16 +98,16 @@ public class ValidateOtpForSetPasswordServiceImpl implements ValidateOtpForSetPa
                 if (failedAttempts > 3) {
                     userKafkaProducer.deleteUserDetails(request.getUserId());  //delete data from user-topic
                     otpKafkaProducer.deleteOtp(request.getUserId());
-                    return new DataResponse(CustomStatusCodes.MAX_FAILED_ATTEMPT, "Maximum OTP attempts reached...\nRedirecting to user registration process.");
+                    return new ResponseCode(CustomStatusCodes.MAX_FAILED_ATTEMPT);
                 }
-                return new DataResponse(CustomStatusCodes.INCORRECT_OTP, "Invalid OTP");
+                return new ResponseCode(CustomStatusCodes.INCORRECT_OTP);
             }
 
-            return new DataResponse(CustomStatusCodes.OTP_VALIDATED, "OTP Validated Successfully");
+            return new ResponseCode(CustomStatusCodes.OTP_VALIDATED);
 
         } catch (Exception e) {
             log.error("Error during OTP validation", e);
-            return new DataResponse(CustomStatusCodes.UNEXPECTED_ERROR, "Internal Server Error");
+            return new ResponseCode(CustomStatusCodes.UNEXPECTED_ERROR);
         }
     }
 

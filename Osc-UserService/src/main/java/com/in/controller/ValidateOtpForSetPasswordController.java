@@ -2,6 +2,7 @@ package com.in.controller;
 
 import com.in.dto.DataResponse;
 import com.in.dto.OtpValidateDtoRequest;
+import com.in.dto.ResponseCode;
 import com.in.mapper.CustomStatusCodeMapper;
 import com.in.service.ValidateOtpForSetPasswordService;
 import jakarta.validation.Valid;
@@ -25,9 +26,9 @@ public class ValidateOtpForSetPasswordController {
     }
 
     @PostMapping("/validateOtp")
-    public ResponseEntity<DataResponse> validateOtpForSetPassword(@Valid @RequestBody OtpValidateDtoRequest request){
+    public ResponseEntity<ResponseCode> validateOtpForSetPassword(@Valid @RequestBody OtpValidateDtoRequest request){
         log.info("Request received for validate OTP: {}",request.toString());
-        DataResponse response = validateOtpService.validateOtpForSetPassword(request);
+        ResponseCode response = validateOtpService.validateOtpForSetPassword(request);
         return  ResponseEntity.status(CustomStatusCodeMapper.mapStatusCode(response.getCode())).body(response);
     }
 

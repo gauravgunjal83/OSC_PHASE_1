@@ -77,7 +77,6 @@ public class RegisterUserServiceImpl implements RegisterUserService {
     }
 
     //Check is email unique
-
     public boolean checkUniqueEmail(String email) {
         log.info("Checking for is Email address unique : {}", email);
         UniqueEmailResponse verifyEmailAddressIsUnique = stub.verifyEmailAddressIsUnique(Mapper.emailToRequest(email));

@@ -2,6 +2,7 @@ package com.in.controller;
 
 import com.in.dto.DataResponse;
 import com.in.dto.LogoutRequestDto;
+import com.in.dto.ResponseCode;
 import com.in.mapper.CustomStatusCodeMapper;
 import com.in.service.LogoutRequestService;
 import jakarta.validation.Valid;
@@ -23,9 +24,9 @@ public class LogoutController {
     }
 
     @PostMapping("/logout")
-    public ResponseEntity<DataResponse> logoutUser(@Valid @RequestBody LogoutRequestDto logoutRequest) {
+    public ResponseEntity<ResponseCode> logoutUser(@Valid @RequestBody LogoutRequestDto logoutRequest) {
         log.info("Request Received for the logout user session with sessionId : {}", logoutRequest.getSessionId());
-        DataResponse response = logoutRequestService.logoutUser(logoutRequest);
+        ResponseCode response = logoutRequestService.logoutUser(logoutRequest);
         return ResponseEntity.status(CustomStatusCodeMapper.mapStatusCode(response.getCode())).body(response);
     }
 }

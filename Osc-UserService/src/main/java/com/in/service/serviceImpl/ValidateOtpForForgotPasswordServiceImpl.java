@@ -4,6 +4,7 @@ import com.in.avro.OtpMessage;
 import com.in.dto.CustomStatusCodes;
 import com.in.dto.DataResponse;
 import com.in.dto.ForgotPasswordRequest;
+import com.in.dto.ResponseCode;
 import com.in.kafka.kafkaProducer.otp.OtpKafkaProducer;
 import com.in.service.ValidateOtpForForgotPasswordService;
 import io.grpc.ManagedChannel;
@@ -28,7 +29,7 @@ public class ValidateOtpForForgotPasswordServiceImpl implements ValidateOtpForFo
     }
 
     @Override
-    public DataResponse validateOtpToResetPassword(ForgotPasswordRequest request) {
+    public ResponseCode validateOtpToResetPassword(ForgotPasswordRequest request) {
         try {
             OtpMessage otpData = otpStore.get(request.getEmail());
             if (!otpData.getOtp().toString().equals(request.getOTP())) {
@@ -36,14 +37,14 @@ public class ValidateOtpForForgotPasswordServiceImpl implements ValidateOtpForFo
                 otpData.setFailedAttempts(failedAttempts);
                 updateFailedOtpAttempts(request.getEmail(), otpData);
                 log.error("OTP {} for Otp Validation", request.getOTP());
-                return new DataResponse(CustomStatusCodes.OTP_INVALID, "Invalid OTP");
+                return new ResponseCode(CustomStatusCodes.OTP_INVALID);
             }
             otpKafkaProducer.deleteOtp(request.getEmail());  //delete data from user-topic
-            return new DataResponse(CustomStatusCodes.OTP_VALID, "OTP Validated Successfully");
+            return new ResponseCode(CustomStatusCodes.OTP_VALID);
 
         } catch (Exception e) {
             log.error("Error during OTP validation \nplease check the credentials:{}",request.getEmail());
-            return new DataResponse(CustomStatusCodes.UNEXPECTED_ERROR, "Internal Server Error");
+            return new ResponseCode(CustomStatusCodes.UNEXPECTED_ERROR);
         }
     }
 

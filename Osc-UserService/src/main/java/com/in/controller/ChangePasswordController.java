@@ -3,6 +3,7 @@ package com.in.controller;
 import com.google.api.Http;
 import com.in.dto.ChangePasswordRequest;
 import com.in.dto.DataResponse;
+import com.in.dto.ResponseCode;
 import com.in.mapper.CustomStatusCodeMapper;
 import com.in.service.ChangePasswordRequestService;
 import jakarta.validation.Valid;
@@ -24,9 +25,9 @@ public class ChangePasswordController {
     }
 
     @PostMapping("/changePassword")
-    public ResponseEntity<DataResponse> changePassword(@Valid @RequestBody ChangePasswordRequest changePasswordRequest) {
+    public ResponseEntity<ResponseCode> changePassword(@Valid @RequestBody ChangePasswordRequest changePasswordRequest) {
         log.info("Request  received for Change password {}", changePasswordRequest.getEmail());
-        DataResponse response = changePasswordRequestService.changePassword(changePasswordRequest);
+        ResponseCode response = changePasswordRequestService.changePassword(changePasswordRequest);
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 }
