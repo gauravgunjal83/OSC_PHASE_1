@@ -11,8 +11,8 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class LoginRequestServiceImpl implements LoginRequestService {
-    private ModelMapper modelMapper;
-    private SessionRepository sessionRepository;
+    private final ModelMapper modelMapper;
+    private final SessionRepository sessionRepository;
 
     public LoginRequestServiceImpl(ModelMapper modelMapper, SessionRepository sessionRepository) {
         this.modelMapper = modelMapper;

@@ -34,8 +34,6 @@ public class SessionKafkaProducer {
                 log.error("Error:" + ex.getMessage());
             }
         });
-
-
     }
 
     public void publishToSessionTopic(SessionRequestDto sessionRequestDto) {

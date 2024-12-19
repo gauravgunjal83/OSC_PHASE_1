@@ -2,7 +2,6 @@ package com.in.service.serviceImpl;
 
 import com.in.config.UtilConfig;
 import com.in.dto.CustomStatusCodes;
-import com.in.dto.DataResponse;
 import com.in.dto.ForgotPasswordRequest;
 import com.in.dto.ResponseCode;
 import com.in.kafka.kafkaProducer.otp.OtpKafkaProducer;
@@ -32,17 +31,15 @@ public class ForgotPasswordServiceImpl implements ForgotPasswordService {
     @Override
     public ResponseCode forgotPassword(String email) {
         try {
-            //checking for email is exist in db or not
-            UniqueEmailResponse isEmailPresent = userStub.isEmailPresent(Mapper.emailToRequest(email));
-            boolean isExists = Mapper.responseToDto(isEmailPresent);
+            UniqueEmailResponse isEmailPresent = userStub.isEmailPresent(Mapper.emailToUniqueEmailReqProto(email));
+            boolean isExists = Mapper.uniqueEmailResponseProtoToDto(isEmailPresent);
             if (!isExists) {
                 log.info("Please provide the valid email for forgot password. \nEmail does not exists:" + email);
                 return new ResponseCode(CustomStatusCodes.EMAIL_INVALID);
             }
-            //Otp generation for forgot password
             String otp = otpGenerator.generateOtp();
             log.info("Otp is generated OTP:{} email: {} ", otp, email);
-            otpProducer.publishToOtpTopic(new ForgotPasswordRequest(email, otp, 0));
+            otpProducer.otpVerificationReqToDto(new ForgotPasswordRequest(email, otp, 0));
             return new ResponseCode(CustomStatusCodes.EMAIL_VALID);
         } catch (Exception e) {
             log.error("Error while processing:", e);

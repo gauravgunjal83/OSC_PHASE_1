@@ -66,19 +66,6 @@ public class ValidateOtpForSetPasswordServiceImpl implements ValidateOtpForSetPa
         OtpMessage updatedOtpMessage = OtpMessage.newBuilder(message).setFailedAttempts(failedAttempts).build();
         otpKafkaProducer.send(userId, updatedOtpMessage);
     }
-
-    public void shutdown() {
-        if (channel != null && !channel.isShutdown()) {
-            channel.shutdown();
-            try {
-                if (!channel.awaitTermination(5, java.util.concurrent.TimeUnit.SECONDS)) {
-                    channel.shutdownNow();
-                }
-            } catch (InterruptedException e) {
-                log.error("Error during channel shutdown: {}", e.getMessage(), e);
-                Thread.currentThread().interrupt();
-                channel.shutdownNow();
-            }
         }
     }*/
         try {
@@ -89,14 +76,13 @@ public class ValidateOtpForSetPasswordServiceImpl implements ValidateOtpForSetPa
                 return new ResponseCode(CustomStatusCodes.USER_ID_NOT_FOUND);
             }
             if (!otpData.getOtp().toString().equals(request.getOTP())) {
-
-                int failedAttempts = otpData.getFailedAttempts() + 1; // increase failedAttempts
+                int failedAttempts = otpData.getFailedAttempts() + 1;
                 otpData.setFailedAttempts(failedAttempts);
                 updateFailedOtpAttempts(request.getUserId(), otpData);
                 log.error("OTP {} for Otp Validation", request.getOTP());
 
-                if (failedAttempts > 3) {
-                    userKafkaProducer.deleteUserDetails(request.getUserId());  //delete data from user-topic
+                if (failedAttempts >= 3) {
+                    userKafkaProducer.deleteUserDetails(request.getUserId());
                     otpKafkaProducer.deleteOtp(request.getUserId());
                     return new ResponseCode(CustomStatusCodes.MAX_FAILED_ATTEMPT);
                 }

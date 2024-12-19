@@ -1,0 +1,14 @@
+{
+  "type": "record",
+  "name": "RecentViewProduct",
+  "namespace": "com.in.avro",
+  "fields": [
+    {
+      "name": "productIds",
+      "type": {
+        "type": "array",
+        "items": "string"
+      }
+    }
+  ]
+}

@@ -33,7 +33,7 @@ public class KafkaOtpConsumer {
             log.error("Received null OtpMessage for key: {}", record.key());
             return; // Don't process further if the message is null
         }
-        // Proceed only if otpMessage is not null
+        // Proceed further only if otpMessage is not null
         try {
             String email = otpMessage.getEmail() != null ? otpMessage.getEmail().toString() : "Unknown Email";
             String purpose = otpMessage.getPurpose() != null ? otpMessage.getPurpose().toString() : "Unknown Purpose";

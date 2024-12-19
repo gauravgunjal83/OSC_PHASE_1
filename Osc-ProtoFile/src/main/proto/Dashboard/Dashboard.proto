@@ -1,0 +1,73 @@
+syntax = "proto3";
+
+option  java_multiple_files = true;
+option java_package = "com.in.dashboard";
+
+message DashboardRequest{
+  repeated  string  productId = 1 ;
+}
+
+message  Product {
+  string productId = 1;
+  string categoryId = 2;
+  string productName = 3;
+  string productDesc = 4;
+  double productPrice = 5;
+  string imagePath = 6;
+}
+
+message Category{
+  string categoryId = 1;
+  string categoryName = 2 ;
+  string imagePath = 3;
+}
+
+message DashboardDetails{
+  repeated  Product featuredProducts = 1 ;
+  repeated  Product similarProducts = 2;
+  repeated  Product recentlyViewedProducts = 3;
+  repeated  Category categories = 4;
+}
+
+message DashboardResponse{
+  DashboardDetails dashBoardDetails = 1;
+}
+
+message ProductDataRequest{
+  string productId = 1 ;
+
+}
+
+message ProductDataResponse{
+  Product product = 1;
+  repeated  Product similarProducts = 2 ;
+
+}
+
+message  FilterProductRequest{
+  string categoryId = 1 ;
+  enum Filter{
+    P = 0;
+    LH = 1;
+    HL = 2;
+    NF = 3;
+  }
+  Filter filter = 2;
+}
+
+message  FilterProductResponse{
+  repeated  Product product = 1 ;
+}
+
+message  ViewCartResponse{
+  repeated  Product product = 1;
+}
+
+service ProductDashboardService {
+  rpc fetchProductForDashboard (DashboardRequest) returns (DashboardResponse);
+  rpc fetchProductDetails (ProductDataRequest) returns (ProductDataResponse);
+  rpc filterProductData (FilterProductRequest) returns (FilterProductResponse);
+  rpc addProductToCart (DashboardRequest) returns (ViewCartResponse);
+}
+
+

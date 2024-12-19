@@ -2,7 +2,6 @@ package com.in.service.serviceImpl;
 
 import com.in.dto.ChangePasswordRequest;
 import com.in.dto.CustomStatusCodes;
-import com.in.dto.DataResponse;
 import com.in.dto.ResponseCode;
 import com.in.mapper.Mapper;
 import com.in.proto.PasswordResponse;
@@ -25,8 +24,8 @@ public class ChangePasswordServiceImpl implements ChangePasswordRequestService {
 
     @Override
     public ResponseCode changePassword(ChangePasswordRequest request) {
-        UniqueEmailResponse isEmailPresent = userDataServiceBlockingStub.isEmailPresent(Mapper.emailToRequest(request.getEmail()));
-        boolean isExists = Mapper.responseToDto(isEmailPresent);
+        UniqueEmailResponse isEmailPresent = userDataServiceBlockingStub.isEmailPresent(Mapper.emailToUniqueEmailReqProto(request.getEmail()));
+        boolean isExists = Mapper.uniqueEmailResponseProtoToDto(isEmailPresent);
         if (!isExists){
             log.info("Email is not found :{}",request.getEmail());
             return new ResponseCode(CustomStatusCodes.PASSWORD_NOT_SAVED);

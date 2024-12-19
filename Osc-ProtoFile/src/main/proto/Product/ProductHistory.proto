@@ -1,0 +1,24 @@
+syntax = "proto3";
+option java_multiple_files = true;
+option java_package = "com.in.ProductHistory";
+
+message RecentlyViewRequest{
+  string userId = 1;
+}
+
+message RecentlyViewResponse{
+  repeated  string ProductIds = 1;
+}
+message UpdateRecentViewRequest{
+  string userId = 1;
+  string productId = 2;
+}
+
+message UpdateRecentViewResponse{
+  bool status = 1 ;
+}
+
+service  RecentlyViewService{
+  rpc fetchRecentlyViewedHistory (RecentlyViewRequest) returns (RecentlyViewResponse);
+  rpc updatedRecentlyViewProducts (UpdateRecentViewRequest) returns (UpdateRecentViewResponse);
+}

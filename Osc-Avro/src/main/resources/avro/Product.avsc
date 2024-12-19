@@ -1,0 +1,34 @@
+{
+  "type": "record",
+  "name": "ProductDetails",
+  "namespace": "com.in.avro",
+  "fields": [
+    {
+      "name": "categoryId",
+      "type": "string"
+    },
+    {
+      "name": "productName",
+      "type": "string"
+    },
+    {
+      "name": "productDescription",
+      "type": "string"
+    },
+    {
+      "name": "productPrice",
+      "type": "double"
+    },
+    {
+      "name": "date",
+      "type": {
+        "type": "long",
+        "logicalType": "timestamp-millis"
+      }
+    },
+    {
+      "name": "imagePath",
+      "type": "string"
+    }
+  ]
+}

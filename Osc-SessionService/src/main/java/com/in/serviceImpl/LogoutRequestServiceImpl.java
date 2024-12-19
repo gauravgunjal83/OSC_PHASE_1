@@ -27,19 +27,15 @@ public class LogoutRequestServiceImpl implements LogoutRequestService {
     @Override
     public ResponseCode logoutUser(LogoutRequestDto logoutRequest) {
         try {
-            // Validate the session via gRPC call
             SessionStatusResponse sessionResponse = serviceBlockingStub.validateSession(Mapper.logoutReqDtoToValidateSessionReqProto(logoutRequest));
-
             if (!Mapper.sessionStatusResponseProtoToDto(sessionResponse)) {
                 log.warn("Session already logged out or invalid sessionId: {}", logoutRequest.getSessionId());
                 return new ResponseCode(CustomStatusCodes.UNEXPECTED_ERROR);
             }
-            // Create a request to update session status to false (logged out)
             SessionRequestDto sessionUpdateRequest = new SessionRequestDto(
                     createSessionKey(sessionResponse.getUserId(), sessionResponse.getDeviceType()),
                     false);
 
-            // Publish the session update to Kafka
             sessionKafkaProducer.publishToSessionTopic(sessionUpdateRequest);
             log.info("Session successfully logged out for sessionId: {}", logoutRequest.getSessionId());
             return new ResponseCode(CustomStatusCodes.LOGOUT_SUCCESS);
@@ -56,7 +52,6 @@ public class LogoutRequestServiceImpl implements LogoutRequestService {
         return new ResponseCode(CustomStatusCodes.UNEXPECTED_ERROR);
     }
 
-    // Helper method to create a session key for Kafka
     private static SessionKey createSessionKey(String userId, String deviceType) {
         return SessionKey.newBuilder()
                 .setUserId(userId)

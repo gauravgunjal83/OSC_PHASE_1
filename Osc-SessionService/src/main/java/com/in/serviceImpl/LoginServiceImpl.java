@@ -46,12 +46,10 @@ public class LoginServiceImpl implements LoginService {
             VerifyCredentialsResponse verifyCredentials = userDataServiceBlockingStub.verifyCredentials(Mapper.loginReqDtoToProto(loginRequest));
             if (verifyCredentials != null && verifyCredentials.getPassword() != null) {
                 log.info("Credentials are matched for userId {}", loginRequest.getUserId());
-                //Check for credentials
                 if (!verifyCredentials.getPassword().equals(loginRequest.getPassword())) {
                     log.error("Password is incorrect for userId: {}", loginRequest.getUserId());
                     return new DataResponse(CustomStatusCodes.PASSWORD_INCORRECT, null);
                 }
-                //check for session are exists with same device or not
                 SessionValue session = sessionStore.get(createSessionId(loginRequest.getUserId(), loginRequest.getLoginDeviceType()));
                 if (session != null && session.getSessionStatus() == true) {
                     log.error("Session already active for this userId {}", loginRequest.getUserId());
@@ -60,7 +58,6 @@ public class LoginServiceImpl implements LoginService {
                 } else {
                     String sessionId = sessionIdGenerator.generateSessionId();
 
-                    //if session is not active for user then create a new session
                     CreateSessionResponse response = sessionServiceBlockingStub.createSession(Mapper.requestToCreateSessionResponse(sessionId, loginRequest.getUserId(), loginRequest.getLoginDeviceType()));
                     log.info("new session created for userId {}", loginRequest.getUserId());
                     log.info("session status {}", response.getSuccess());
@@ -84,7 +81,6 @@ public class LoginServiceImpl implements LoginService {
 
     }
 
-    // for set key in session-topic
     public static SessionKey createSessionId(String userId, String deviceName) {
         return SessionKey.newBuilder()
                 .setUserId(userId)

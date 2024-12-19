@@ -14,7 +14,6 @@ public interface UserDataRepository extends JpaRepository<UserRegistrationReques
 
     boolean existsByEmail(String email);
 
-
     @Query("SELECT new com.in.dto.UserLoginDto(u.userId, u.name, u.password) FROM UserRegistrationRequestEntity u WHERE u.userId = :userId")
     UserLoginDto findNameAndPasswordByUserId(@Param("userId") String userId);
 

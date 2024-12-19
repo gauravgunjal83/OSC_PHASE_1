@@ -15,11 +15,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class UserDataServiceImpl implements UserDataService {
-
     private static final Logger log = LoggerFactory.getLogger(UserDataServiceImpl.class);
-
-    private ModelMapper mapper;
-    private UserDataRepository userDataRepository;
+    private final ModelMapper mapper;
+    private final UserDataRepository userDataRepository;
 
     public UserDataServiceImpl(ModelMapper mapper, UserDataRepository userDataRepository) {
         this.mapper = mapper;

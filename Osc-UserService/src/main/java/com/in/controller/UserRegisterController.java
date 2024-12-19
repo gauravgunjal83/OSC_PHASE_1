@@ -1,9 +1,9 @@
 package com.in.controller;
 
 import com.in.dto.DataResponse;
-import com.in.dto.RegistrationRequest;
+import com.in.dto.RegistrationRequestDto;
 import com.in.mapper.CustomStatusCodeMapper;
-import com.in.service.RegisterUserService;
+import com.in.service.SignupUserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
@@ -18,17 +18,12 @@ import org.springframework.web.bind.annotation.*;
 public class UserRegisterController {
 
     private static final Logger log = LoggerFactory.getLogger(UserRegisterController.class);
-
-   /* public UserRegisterController(RegisterUserService registerUserService) {
-        this.registerUserService = registerUserService;
-    }*/
-
-    private final RegisterUserService registerUserService;
+    private final SignupUserService signupUserService;
 
     @PostMapping("/signup")
-    public ResponseEntity<DataResponse> registerUser(@Valid @RequestBody RegistrationRequest request) {
+    public ResponseEntity<DataResponse> signupUser(@Valid @RequestBody RegistrationRequestDto request) {
         log.info("Create user request received: {}", request);
-        DataResponse dataResponse = registerUserService.registerUser(request);
+        DataResponse dataResponse = signupUserService.signupUser(request);
         return ResponseEntity.status(CustomStatusCodeMapper.mapStatusCode(dataResponse.getCode())).body(dataResponse);
     }
     

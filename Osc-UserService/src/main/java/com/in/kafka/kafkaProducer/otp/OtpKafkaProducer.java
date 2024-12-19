@@ -28,13 +28,10 @@ public class OtpKafkaProducer {
                     } else {
                         log.error("Error: {}", ex.getMessage());
                     }
-
-
                 });
     }
 
-    // Use at the time of producing otp data in otp topic at the time of user registration
-    public boolean publishToOtpTopic(OtpVerificationRequest request) {
+    public boolean otpVerificationReqToDto(OtpVerificationRequest request) {
         try {
             send(request.getUserId(), Mapper.requestToOtp(request));
             log.info("Otp is send to topic for user registration: {}", request);
@@ -45,13 +42,11 @@ public class OtpKafkaProducer {
         }
     }
 
-    //Delete Otp data from Otp topic
     public void deleteOtp(String userId) {
         kafkaTemplate.send(AppConstant.OTP_TOPIC, userId, null);
     }
 
-    //For forgot password
-    public boolean publishToOtpTopic(ForgotPasswordRequest request) {
+    public boolean otpVerificationReqToDto(ForgotPasswordRequest request) {
         try {
             send(request.getEmail(), Mapper.forgotPasswordReqToOtpAvro(request));
             log.info("Otp sent to otp topic for reset password for user {}", request);

@@ -14,18 +14,18 @@ public class Mapper {
     public static final String REGISTRATION = "USER_REGISTRATION";
     public static final String RESET_PASSWORD = "RESET_PASSWORD";
 
-    public static Boolean responseToDto(UniqueEmailResponse uniqueEmailResponse) {
+    public static Boolean uniqueEmailResponseProtoToDto(UniqueEmailResponse uniqueEmailResponse) {
         return uniqueEmailResponse.getIsUnique();
     }
 
-    public static User requestToUser(RegistrationRequest registrationRequest) {
-        return new User(registrationRequest.getName(),
-                registrationRequest.getEmail(),
-                DateConfig.localDateToString(registrationRequest.getDOB())
-                , registrationRequest.getContact());
+    public static User registrationReqDtoToUserAvro(RegistrationRequestDto registrationRequestDto) {
+        return new User(registrationRequestDto.getName(),
+                registrationRequestDto.getEmail(),
+                DateConfig.localDateToString(registrationRequestDto.getDOB())
+                , registrationRequestDto.getContact());
     }
 
-    public static UniqueEmailRequest emailToRequest(String email) {
+    public static UniqueEmailRequest emailToUniqueEmailReqProto(String email) {
         return UniqueEmailRequest.newBuilder().setEmail(email).build();
     }
 

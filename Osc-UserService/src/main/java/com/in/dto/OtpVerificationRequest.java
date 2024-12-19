@@ -19,45 +19,4 @@ public class OtpVerificationRequest {
     @Max(value = 3, message = "Failed OTP attempts not be more than 3")
     private int failedOtpAttempts;
 
-//    public OtpVerificationRequest(String userId, String OTP, String email, int failedOtpAttempts) {
-//        this.userId = userId;
-//        this.OTP = OTP;
-//        this.email = email;
-//        this.failedOtpAttempts = failedOtpAttempts;
-//    }
-//
-//    public OtpVerificationRequest() {
-//    }
-//
-//    public String getUserId() {
-//        return userId;
-//    }
-//
-//    public void setUserId(String userId) {
-//        this.userId = userId;
-//    }
-//
-//    public String getOTP() {
-//        return OTP;
-//    }
-//
-//    public void setOTP(String OTP) {
-//        this.OTP = OTP;
-//    }
-//
-//    public String getEmail() {
-//        return email;
-//    }
-//
-//    public void setEmail(String email) {
-//        this.email = email;
-//    }
-//
-//    public int getFailedOtpAttempts() {
-//        return failedOtpAttempts;
-//    }
-//
-//    public void setFailedOtpAttempts(int failedOtpAttempts) {
-//        this.failedOtpAttempts = failedOtpAttempts;
-//    }
 }

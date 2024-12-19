@@ -61,7 +61,7 @@ public class GlobalExceptionHandler {
         if (ex instanceof MethodArgumentTypeMismatchException) {
             return new ResponseEntity<>("Enter the correct URL!!!", HttpStatus.BAD_REQUEST);
         } else if (ex instanceof NoResourceFoundException) {
-            return new ResponseEntity<>("Record not found!!!", HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>("Incorrect URL!!!", HttpStatus.NOT_FOUND);
         }
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An error occurred!");
     }

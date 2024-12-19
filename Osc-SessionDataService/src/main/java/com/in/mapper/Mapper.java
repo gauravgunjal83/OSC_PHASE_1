@@ -17,7 +17,7 @@ public class Mapper {
         return new SessionResponseDto(sessionDto.getSessionId(),
                 sessionDto.getUserId(),
                 sessionDto.getLoginDevice(),
-                LocalDateTime.now(), null); //for setting up the logout time as null at the time of logIn
+                LocalDateTime.now(), null);
     }
 
     public static CreateSessionDto requestToCreateSessionDto(CreateSessionRequest request) {

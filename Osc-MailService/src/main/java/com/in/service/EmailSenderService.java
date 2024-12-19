@@ -31,7 +31,7 @@ public class EmailSenderService {
 
     private void sendEmail(String recipient, String subject, String body) throws MessagingException {
         Session session = createSession();
-        session.setDebug(true); // see all log
+        session.setDebug(true); //for see all log
 
         try {
             Message message = new MimeMessage(session);
@@ -49,17 +49,17 @@ public class EmailSenderService {
     }
 
     public void sendRegistrationEmail(String recipient, String uniqueId, String otp) throws MessagingException {
-        String subject = "OroSoft Shopping Cart \nComplete your REGISTRATION";
+        String subject = "OSC \nComplete your REGISTRATION";
         String body = String.format(
-                "Welcome to OroSoft Shopping Cart \n Dear User,\nYour One-Time Password (OTP) for accessing OroSoft Shopping Application is: %s\nPlease use this code to complete your registration. \nYour shopping journey awaits! Experience the joy of secure and seamless shopping with Orosoft. \n\nThank you,\n" +
-                        "OroSoft Shopping Team", otp, uniqueId);
+                "Welcome to OSC \n Dear User,\nYour One-Time Password (OTP) for accessing OSC Application is: %s\nPlease use this code to complete your registration. \nYour shopping journey awaits! Experience the joy of secure and seamless shopping with OSC. \n\nThank you,\n" +
+                        "OSC Shopping Team", otp, uniqueId);
         sendEmail(recipient, subject, body);
     }
 
     public void sendResetPasswordEmail(String recipient, String otp) throws MessagingException {
         String subject = "Your OTP Code for RESET_PASSWORD";
-        String body = String.format("Welcome to OroSoft Shopping Cart \n Dear User,\n\nYour One-Time Password (OTP) for accessing OroSoft Shopping Application is: %s\n\nPlease use this code to reset your password. \n\nYour shopping journey awaits! Experience the joy of secure and seamless shopping with Orosoft. \n\nThank you,\n" +
-                "OroSoft Shopping Team", otp);
+        String body = String.format("Welcome to OSC \n Dear User,\n\nYour One-Time Password (OTP) for accessing OSC Application is: %s\n\nPlease use this code to reset your password. \n\nYour shopping journey awaits! Experience the joy of secure and seamless shopping with OSC. \n\nThank you,\n" +
+                "OSC Shopping Team", otp);
         sendEmail(recipient, subject, body);
     }
 }

@@ -1,0 +1,16 @@
+{
+  "type": "record",
+  "name": "ProductViewCount",
+  "namespace": "com.in.avro",
+  "fields": [
+    {
+      "name": "count",
+      "type": "int"
+    },
+    {
+      "name": "categoryId",
+      "type": "string"
+    }
+
+  ]
+}

@@ -31,7 +31,6 @@ public class UserKafkaProducer {
                 });
     }
 
-    //Delete User details by setting value as a null against key
     public void deleteUserDetails(String userId) {
         kafkaTemplate.send(AppConstant.USER_REGISTRATION_TOPIC, userId, null);
     }

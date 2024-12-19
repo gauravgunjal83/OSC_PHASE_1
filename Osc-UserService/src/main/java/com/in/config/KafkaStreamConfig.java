@@ -39,13 +39,13 @@ public class KafkaStreamConfig {
         return props;
     }
 
-    @Bean(name = "streams-builder")
+    @Bean
     public StreamsBuilder streamsBuilder() {
         return new StreamsBuilder();
     }
 
-    @Bean(name = "streams")
-    public KafkaStreams kafkaStreams(@Qualifier("streams-properties") Properties streamsProps, @Qualifier("streams-builder") StreamsBuilder streamsBuilder) {
+    @Bean
+    public KafkaStreams kafkaStreams(@Qualifier("streams-properties") Properties streamsProps, StreamsBuilder streamsBuilder) {
         userKTable(streamsBuilder);
         otpMessageKTable(streamsBuilder);
         KafkaStreams kafkaStreams = new KafkaStreams(streamsBuilder.build(), streamsProps);
@@ -56,7 +56,7 @@ public class KafkaStreamConfig {
     }
 
     @Bean
-    public ReadOnlyKeyValueStore<String, User> userStore(@Qualifier("streams") KafkaStreams kafkaStreams) throws InterruptedException {
+    public ReadOnlyKeyValueStore<String, User> userStore( KafkaStreams kafkaStreams) throws InterruptedException {
         while (kafkaStreams.state() != KafkaStreams.State.RUNNING) {
             Thread.sleep(1000);
         }
@@ -64,23 +64,23 @@ public class KafkaStreamConfig {
     }
 
     @Bean
-    public ReadOnlyKeyValueStore<String, OtpMessage> otpStore(@Qualifier("streams") KafkaStreams kafkaStreams) throws InterruptedException {
+    public ReadOnlyKeyValueStore<String, OtpMessage> otpStore( KafkaStreams kafkaStreams) throws InterruptedException {
         while (kafkaStreams.state() != KafkaStreams.State.RUNNING) {
             Thread.sleep(1000);
         }
         return kafkaStreams.store(StoreQueryParameters.fromNameAndType(AppConstant.OTP_STORE, QueryableStoreTypes.keyValueStore()));
     }
 
-    @Bean(name = "otp-table")
-    public KTable<String, OtpMessage> otpMessageKTable(@Qualifier("streams-builder") StreamsBuilder streamsBuilder) {
+    @Bean
+    public KTable<String, OtpMessage> otpMessageKTable( StreamsBuilder streamsBuilder) {
         return streamsBuilder.table(AppConstant.OTP_TOPIC, Consumed.with(Serdes.String(), OtpSerde.OtpSerde()),
                 Materialized.<String, OtpMessage, KeyValueStore<Bytes, byte[]>>as(AppConstant.OTP_STORE)
                         .withKeySerde(Serdes.String()).withValueSerde(OtpSerde.OtpSerde()));
 
     }
 
-    @Bean(name = "user-table")
-    public KTable<String, User> userKTable(@Qualifier("streams-builder") StreamsBuilder streamsBuilder) {
+    @Bean
+    public KTable<String, User> userKTable(StreamsBuilder streamsBuilder) {
         return streamsBuilder.table(AppConstant.USER_REGISTRATION_TOPIC, Consumed.with(Serdes.String(), UserSerde.User()),
                 Materialized.<String, User, KeyValueStore<Bytes, byte[]>>as(AppConstant.USER_REGISTRATION_STORE)
                         .withKeySerde(Serdes.String()).withValueSerde(UserSerde.User()));

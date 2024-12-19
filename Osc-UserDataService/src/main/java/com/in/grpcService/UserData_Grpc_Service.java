@@ -17,8 +17,8 @@ import org.slf4j.LoggerFactory;
 //@RequiredArgsConstructor
 public class UserData_Grpc_Service extends UserDataServiceGrpc.UserDataServiceImplBase {
 
-    private static Logger log = LoggerFactory.getLogger(UserData_Grpc_Service.class);
-    private UserDataService userDataService;
+    private static final Logger log = LoggerFactory.getLogger(UserData_Grpc_Service.class);
+    private final UserDataService userDataService;
 
     public UserData_Grpc_Service(UserDataService userDataService) {
         this.userDataService = userDataService;
@@ -36,25 +36,19 @@ public class UserData_Grpc_Service extends UserDataServiceGrpc.UserDataServiceIm
         }*/
         try {
             log.info("Received RegisterUserRequest: {}", request);
-
-            // Map request to DTO
             UserRegistrationRequestDto userDto = Mapper.requestToDto(request);
             log.info("Mapped to UserRegistrationRequestDto: {}", userDto);
-
-            // Call the service to create user
             UserRegistrationRequestDto user = userDataService.createUser(userDto);
             log.info("User successfully stored into database: {}", user);
 
-            // Map response and send it back
             RegisterUserResponse response = Mapper.dtoToResponse(user);
             responseObserver.onNext(response);
             responseObserver.onCompleted();
         } catch (Exception e) {
-            // Log the error and send an INTERNAL error
             log.error("Error while saving user details", e);
             responseObserver.onError(
                     Status.INTERNAL.withDescription("Error in saving user details...")
-                            .withCause(e) // Propagate the actual exception
+                            .withCause(e)
                             .asRuntimeException()
             );
         }
@@ -77,16 +71,14 @@ public class UserData_Grpc_Service extends UserDataServiceGrpc.UserDataServiceIm
 */
         try {
             log.info("Checking email uniqueness for: {}", request.getEmail());
-            // Check if the email exists in the database
             boolean emailExists = userDataService.isEmailAddressExists(Mapper.requestToDto(request));
             if (emailExists) {
                 log.warn("Email '{}' is already registered.", request.getEmail());
             } else {
                 log.info("Email '{}' is unique.", request.getEmail());
             }
-            // Send response back to client
             UniqueEmailResponse response = UniqueEmailResponse.newBuilder()
-                    .setIsUnique(!emailExists) // true if unique, false if exists
+                    .setIsUnique(!emailExists)
                     .build();
             responseObserver.onNext(response);
             responseObserver.onCompleted();
@@ -122,7 +114,6 @@ public class UserData_Grpc_Service extends UserDataServiceGrpc.UserDataServiceIm
             boolean emailExists = userDataService.isEmailAddressExists(Mapper.requestToDto(request));
             if (!emailExists)
                 log.error("this email is not valid " + request.getEmail());
-            //log.info("Enter the valid credentials for forgot the password for user ");
             responseObserver.onNext(Mapper.dtoToResponse(emailExists));
             responseObserver.onCompleted();
 
@@ -135,17 +126,11 @@ public class UserData_Grpc_Service extends UserDataServiceGrpc.UserDataServiceIm
     public void resetPassword(PasswordRequest request, StreamObserver<PasswordResponse> responseObserver) {
         try {
             log.info("Processing password reset for email: {}", request.getEmail());
-
-            // Convert request to DTO and update the password
             boolean isUpdate = userDataService.changePassword(Mapper.passwordReqProtoToChangePasswordDto(request));
-
-            // Send the response based on the result
             responseObserver.onNext(Mapper.booleanToPasswordResponseProto(isUpdate));
             responseObserver.onCompleted();
         } catch (RuntimeException e) {
             log.error("Failed to reset password for email: {}", request.getEmail(), e);
-
-            // Return NOT_FOUND if the user doesn't exist or another runtime issue occurs
             responseObserver.onError(
                     Status.NOT_FOUND
                             .withDescription("User not found. Failed to update password.")

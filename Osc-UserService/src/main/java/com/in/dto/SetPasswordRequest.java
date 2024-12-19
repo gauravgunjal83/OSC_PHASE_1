@@ -18,12 +18,4 @@ public class SetPasswordRequest {
     @Pattern(regexp = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@$!%*?&])[A-Za-z\\d@$!%*?&]{8,20}$",
             message = "Password must be 8-20 characters long, contain at least one uppercase letter, one lowercase letter, one digit, and one special character (@$!%*?&).")
     private String password;
-
-   /* public SetPasswordRequest() {
-    }
-
-    public SetPasswordRequest(String userId, String password) {
-        this.userId = userId;
-        this.password = password;
-    }*/
 }

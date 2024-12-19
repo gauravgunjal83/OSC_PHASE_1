@@ -1,29 +1,6 @@
 server:
   port: 8080
 
-spring:
-  jackson:
-    date-format: yyyy-MM-dd
-  kafka:
-    bootstrap-servers: 192.168.99.223:19092
-    streams:
-      application-id: OSC-Application
-    producer:
-      key-serializer: org.apache.kafka.common.serialization.StringSerializer
-      value-serializer: io.confluent.kafka.serializers.KafkaAvroSerializer
-      properties:
-        schema.registry.url: http://192.168.99.223:18081
-    consumer:
-      group-id: consumer_group
-      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
-      value-deserializer: io.confluent.kafka.serializers.KafkaAvroDeserializer
-      properties:
-        schema.registry.url: http://192.168.99.223:18081
-        specific.avro.reader: true
-      # Spring Boot specific Kafka deserializer configurations
-      spring.kafka.consumer.value-deserializer.delegate.class: io.confluent.kafka.serializers.KafkaAvroDeserializer
-      spring.kafka.consumer.value-deserializer.spring.deserializer.value.default.type: com.in.dto.User
-
 logging:
   level:
     root: INFO
